@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
+ <!-- 27기 koogle 이인호 -->
 <mapper namespace="kr.or.nationRental.agency.service.AgencyMapper">
   	<insert id="insertAgency" parameterType="kr.or.nationRental.functionary.service.FunctionaryDto">
   		

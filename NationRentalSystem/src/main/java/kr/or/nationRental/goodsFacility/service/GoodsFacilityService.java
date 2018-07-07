@@ -123,7 +123,7 @@ public class GoodsFacilityService {
 			int goodsFacilityCode = goodsFacilityDto.getGoodsfacilityCode();
 			logger.debug("goodsFacilityCode :" + goodsFacilityCode);
 			for(GoodsFacilityFile goodsFacilityFile : goodsFacilityDto.getGoodsFacilityFile()) {				
-				goodsFacilityFile.setGoodsfacilityCode(goodsFacilityCode);
+				goodsFacilityFile.setGoodsfacilityCode(goodsFacilityCode); 
 				goodsFacilityFileDao.insertGoodsFacilityFile(goodsFacilityFile);
 			}
 		}	

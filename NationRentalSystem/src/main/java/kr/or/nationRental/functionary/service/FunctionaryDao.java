@@ -1,3 +1,4 @@
+/* 27기 koogle 이인호 */
 package kr.or.nationRental.functionary.service;
 
 import java.util.List;
@@ -133,7 +134,7 @@ public class FunctionaryDao {
 		return sqlSession.selectList(NS+"selectListFunctionaryWorkAnnualfeePakage", map);
 	}
 	
-	//공무원 대행업체등록 업무조회 카운트
+	//공무원 연회비/패키지등록 업무조회 카운트
 	public int totalCountFunctionaryWorkAnnualfeePakage(Map<String, Object> map) {
 		logger.debug("FunctionaryDao - totalCountFunctionaryWorkAnnualfeePakage - map : " + map);
 		return sqlSession.selectOne(NS+"totalCountFunctionaryWorkAnnualfeePakage", map);

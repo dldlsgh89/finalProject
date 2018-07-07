@@ -328,9 +328,8 @@
 													</button>
 													<ul id="dropDownMenu" class="dropdown-menu" role="menu">
 														<li><a href="#">전체 검색</a></li>
-														<li><a href="#">시설/물품명 검색</a></li>
-														<li><a href="#">행정기관명 검색</a></li>
-														<li><a href="#">회원명 검색</a></li>
+														<li><a href="#">연회비/패키지명 검색</a></li>
+														<li><a href="#">적용 행정기관명 검색</a></li>
 														<li><a href="#">등록날짜 검색</a></li>
 													</ul>
 												</div>
@@ -352,11 +351,14 @@
 											</tr>
 										</thead>
 										<tbody>									
-											<c:forEach var="annualfeePakageDto" items="${map.annualfeePakageList}">
-													<tr>
-														<td>${annualfeePakageDto.annualfeePakageCode}</td>														
+											<c:forEach var="annualfeePakageDto" items="${list}">
+													<tr>														
 														<td>${annualfeePakageDto.annualfeePakageName}</td>
-														<td>${annualfeePakageDto.adminagencyCode}</td>
+														<td>
+															<c:forEach var="adminagencyDto" items="${annualfeePakageDto.adminagencyDto}">
+																${adminagencyDto.adminagencyName} &nbsp;
+															</c:forEach>
+														</td>														
 														<td>${annualfeePakageDto.annualfeePakageDateRegistration}</td>													
 													</tr>																						
 											</c:forEach>									

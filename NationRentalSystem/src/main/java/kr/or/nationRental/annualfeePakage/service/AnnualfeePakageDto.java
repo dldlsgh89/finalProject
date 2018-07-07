@@ -1,7 +1,10 @@
+/* 27기 koogle 이인호 */
 package kr.or.nationRental.annualfeePakage.service;
 
 import java.sql.Date;
 import java.util.List;
+
+import kr.or.nationRental.adminagency.service.AdminagencyDto;
 
 public class AnnualfeePakageDto {
 	private int annualfeePakageCode; //연회비패키지코드
@@ -12,6 +15,7 @@ public class AnnualfeePakageDto {
 	private int annualfeePakageDiscountRate; //연회비/패키지할인률
 	private Date annualfeePakageDateRegistration; //연회비/패키지등록날짜	
 	private List<AnnualfeePakageAuthorityDto> annualfeePakageAuthority; //연회비패키지권한범위클래스
+	private List<AdminagencyDto> adminagencyDto; //행정기관Dto
 	private List<Integer> annualfeePakageAuthorityCode; //연회비패키지코드
 	private List<Integer> adminagencyCode; //행정기관코드	
 	private String citizenId; //구입자 id
@@ -63,6 +67,12 @@ public class AnnualfeePakageDto {
 	public void setAnnualfeePakageAuthority(List<AnnualfeePakageAuthorityDto> annualfeePakageAuthority) {
 		this.annualfeePakageAuthority = annualfeePakageAuthority;
 	}
+	public List<AdminagencyDto> getAdminagencyDto() {
+		return adminagencyDto;
+	}
+	public void setAdminagencyDto(List<AdminagencyDto> adminagencyDto) {
+		this.adminagencyDto = adminagencyDto;
+	}
 	public List<Integer> getAnnualfeePakageAuthorityCode() {
 		return annualfeePakageAuthorityCode;
 	}
@@ -87,11 +97,10 @@ public class AnnualfeePakageDto {
 				+ ", annualfeePakageName=" + annualfeePakageName + ", annualfeePakagePrice=" + annualfeePakagePrice
 				+ ", annualfeePakageTextSangse=" + annualfeePakageTextSangse + ", annualfeePakageDiscountRate="
 				+ annualfeePakageDiscountRate + ", annualfeePakageDateRegistration=" + annualfeePakageDateRegistration
-				+ ", annualfeePakageAuthority=" + annualfeePakageAuthority + ", annualfeePakageAuthorityCode="
-				+ annualfeePakageAuthorityCode + ", adminagencyCode=" + adminagencyCode + ", citizenId=" + citizenId
-				+ "]";
+				+ ", annualfeePakageAuthority=" + annualfeePakageAuthority + ", adminagencyDto=" + adminagencyDto
+				+ ", annualfeePakageAuthorityCode=" + annualfeePakageAuthorityCode + ", adminagencyCode="
+				+ adminagencyCode + ", citizenId=" + citizenId + "]";
 	}
-	
 	
 	
 }
