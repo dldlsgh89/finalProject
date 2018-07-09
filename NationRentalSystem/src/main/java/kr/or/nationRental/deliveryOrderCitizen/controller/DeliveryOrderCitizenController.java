@@ -38,8 +38,7 @@ public class DeliveryOrderCitizenController {
 		Map<String, Object> map = deliveryOrderCitizenService.insertDeliveryOrderCitizenSelectAddress(deliveryOrderCitizenDto, session);
 		
 		model.addAttribute("deliveryOrderCitizenDto", deliveryOrderCitizenDto);
-		model.addAttribute("map", map);
-		
+		model.addAttribute("map", map);		
 		
 		return "/deliveryOrder/insertDeliveryOrderCitizenform";
 	}
@@ -73,7 +72,6 @@ public class DeliveryOrderCitizenController {
 	} 
 	
 	//신청한 배달의 주소지를 수정하는 화면으로 이동
-	//수정할 배달정보의 기존정보를 select해준다
 	@RequestMapping(value="/updateViewDeliveryOrderCitizenAddress", method=RequestMethod.GET)
 	public String updateViewDeliveryOrderCitizenAddress(DeliveryOrderCitizenDto deliveryOrderCitizenDto
 													,Model model) {
@@ -83,7 +81,7 @@ public class DeliveryOrderCitizenController {
 		return "/deliveryOrder/updateViewDeliveryOrderCitizenAddress";
 	}
 	
-	//신청한 배달의 주소지를 수정기능
+	//신청한 배달의 주소지 수정기능
 	@RequestMapping(value="/updateDeliveryOrderCitizenAddress", method=RequestMethod.POST)
 	public String updateDeliveryOrderCitizenAddress(DeliveryOrderCitizenDto deliveryOrderCitizenDto) {
 		logger.debug("DeliveryOrderCitizenController - updateDeliveryOrderCitizenAddress - deliveryOrderCitizenDto : " + deliveryOrderCitizenDto.toString());

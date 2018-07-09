@@ -43,7 +43,7 @@ public class AnnualfeePakageController {
 	 *연회비패키지의 dto를 만들고 해당 dto에 연회비패키지 적용 행정기관을 또 다른 dto를 List로 받을수 있도록 한다
 	 *매서드 구성
 	 *연회비패키지의 적용 행정기관을 제외한 다른 데이터들로 연회비패키지를 먼저 insert하는 메서드를 실행한 뒤에
-	 *해당 쿼리의 primary값으로 설정한 autoincrement의 값을 리턴받아
+	 *해당 쿼리의 primary값으로 설정한 auto-increment의 값을 리턴받아
 	 *연회비패키지의 적용 행정기관을 insert하는 메서드의 값으로 집어넣는다
 	 *해당 메서드들은 트랜잭션처리한다  
 	 *? 생각해보니 dto구성을 나눌 필요가 없이 연회비패키지 적용 행정기관을 받는 변수를 List타입으로 해주면 되지 않을까 싶다	 *
@@ -59,28 +59,26 @@ public class AnnualfeePakageController {
 		return "redirect:/selectListAnnualfeePakage";
 	}
 	
-	/*연회비 패키지 조회
+	/*연회비 패키지 조회List
 	 *첫번째는 연회비 패키지 조회form으로 이동하는 것
 	 *session처리되어있는 memberLevel에 따라 기능이 약간씩 다른데 
 	 *관리자의 경우 - 등록된 연회비 패키지를 전부 볼수 있고, 삭제처리 할수 있는 form
 	 *공무원의 경우 - 등록된 연회비 패키지를 전부 볼수 있고, 그중에서 자신의 id로 등록한 연회비패키지를 수정, 삭제처리할수 있는 form
-	 *시민의 경우 - 등록된 연회비 패키지를 전부 볼수 있고, 그중에서 연회비패키지를 구입할 수 있는 form이며 구입한 연회비 패키지를 구분할수 있는 form 
-	 *위의 기능구분을 상세보기창에서 구분하는것으로 하자
+	 *시민의 경우 - 등록된 연회비 패키지를 전부 볼수 있고, 그중에서 연회비패키지를 구입할 수 있는 form
+	 *위의 기능구분을 상세보기창에서 구분하는것으로 바꿈
 	 */
 	@RequestMapping(value="/selectListAnnualfeePakage", method=RequestMethod.GET)
-	public String selectListAnualfeePakage(HttpSession session
-											,Model model
+	public String selectListAnualfeePakage(Model model
 											,@RequestParam(value="currentPage", defaultValue="1") int currentPage
 											,@RequestParam(value="pagePerRow", defaultValue="10", required=true) int pagePerRow
 											,@RequestParam(value="searchOption", defaultValue="all") String searchOption
 											,@RequestParam(value="keyword", defaultValue="") String keyword) {
-		MemberDto member = (MemberDto) session.getAttribute("member");
-		String memeberLevel = member.getMemberLevel();
+		/*MemberDto member = (MemberDto) session.getAttribute("member");
+		String memeberLevel = member.getMemberLevel();*/
 		
-
 		Map<String, Object> map = annualfeePakageService.selectListFunctionary(currentPage, pagePerRow, searchOption, keyword);
 		logger.debug("AnnualfeePakageController - selectListAnualfeePakage - map.get('list') : " + map.get("list"));
-		model.addAttribute("memeberLevel", memeberLevel);
+		/*model.addAttribute("memeberLevel", memeberLevel);*/
 		model.addAttribute("list", map.get("list"));
 		model.addAttribute("lastPage", map.get("lastPage"));
 		model.addAttribute("currentPage", currentPage);
@@ -113,7 +111,6 @@ public class AnnualfeePakageController {
 											,AnnualfeePakageDto annualfeePakageDto) {
 		logger.debug("AnnualfeePakageController - annualfeePakageSangse - annualfeePakageDto : " + annualfeePakageDto);
 		MemberDto member = (MemberDto) session.getAttribute("member");
-		
 
 		AnnualfeePakageDto returnAnnualfeePakageDto = annualfeePakageService.annualfeePakageSangse(annualfeePakageDto);
 		logger.debug("AnnualfeePakageController - annualfeePakageSangse - returnAnnualfeePakageDto : " + returnAnnualfeePakageDto.toString());
@@ -126,34 +123,26 @@ public class AnnualfeePakageController {
 	@RequestMapping(value="/deleteAnnualfeePakage", method=RequestMethod.GET)
 	public String deleteAnnualfeePakage(AnnualfeePakageDto annualfeePakageDto) {
 		logger.debug("AnnualfeePakageController - deleteAnnualfeePakage - annualfeePakageDto : " + annualfeePakageDto);
-		
-
-		annualfeePakageService.deleteAnnualfeePakage(annualfeePakageDto);
-		
-		
+		annualfeePakageService.deleteAnnualfeePakage(annualfeePakageDto);		
 		return "redirect:/selectListAnnualfeePakage";
 	}
 	
-	/*연회비패키지 수정처리 
-	 * 수정처리를 위한 화면기능
+	/*연회비패키지 수정처리화면 
 	 * */
 	@RequestMapping(value="/updateAnnualfeePakage", method=RequestMethod.GET)
 	public String updateAnnualfeePakage(AnnualfeePakageDto annualfeePakageDto
 										,Model model) {
 		logger.debug("AnnualfeePakageController - updateAnnualfeePakage - GET - annualfeePakageDto : " + annualfeePakageDto);
-		
-
-		AnnualfeePakageDto returnAnnualfeePakageDto = annualfeePakageService.updateVeiwAnnualfeePakage(annualfeePakageDto);
-		
+		AnnualfeePakageDto returnAnnualfeePakageDto = annualfeePakageService.updateVeiwAnnualfeePakage(annualfeePakageDto);		
 		model.addAttribute("returnAnnualfeePakageDto", returnAnnualfeePakageDto);
 		return "/annualfeePakage/updateAnnualfeePakage";
 	}
 	
 	/*연회비 수정처리
-	 * 수정처리를 위한 메서드
+	 * 수정처리를 위한 기능
 	 * annualfee_pakage테이블의 데이터 update 처리
-	 * annualfee_pakage_authority테이블의 데이터 delete처리
-	 * annualfee_pakage_authority테이블의 데이터 insert처리
+	 * annualfee_pakage_authority테이블의 삭제한 행정기관 데이터 delete처리
+	 * annualfee_pakage_authority테이블의 추가한 행정기관 데이터 insert처리
 	 * annualfeePakageSangse로 redirect
 	 */
 	@RequestMapping(value="/updateAnnualfeePakage", method=RequestMethod.POST)
@@ -161,8 +150,6 @@ public class AnnualfeePakageController {
 										,HttpSession session
 										,Model model) {
 		logger.debug("AnnualfeePakageController - updateAnnualfeePakage - POST - annualfeePakageDto : " + annualfeePakageDto);
-		
-
 		annualfeePakageService.updateAnnualfeePakage(annualfeePakageDto);
 		
 		return "redirect:/selectListAnnualfeePakage";
@@ -184,15 +171,12 @@ public class AnnualfeePakageController {
 		return "redirect:/selectListAnnualfeePakage";
 	}
 	
-	/*시민이 자신이 구입한 연회비패키지만 보기
-	 * 
-	 */
+	/*시민이 자신이 구입한 연회비패키지 보기 */
 	@RequestMapping(value="/selectListAnnualfeePakageOwnership", method=RequestMethod.GET)
 	public String selectListAnnualfeePakageOwnership(HttpSession session
 													,Model model) {
 		MemberDto member = (MemberDto) session.getAttribute("member");
-		String memeberId = member.getMemberId();
-		
+		String memeberId = member.getMemberId();		
 
 		List<AnnualfeePakageDto> list = annualfeePakageService.selectListAnnualfeePakageOwnership(memeberId);
 		logger.debug("AnnualfeePakageController - selectListAnualfeePakage - memeberId : " + memeberId);

@@ -46,7 +46,7 @@ public class DeliveryOrderCitizenService {
 		
 	}
 	
-	//신청한 배달의 주소지를 수정기능
+	//신청한 배달의 주소지 수정기능
 	public void updateDeliveryOrderCitizenAddress(DeliveryOrderCitizenDto deliveryOrderCitizenDto) {
 		logger.debug("DeliveryOrderCitizenService - updateDeliveryOrderCitizenAddress - deliveryOrderCitizenDto : " + deliveryOrderCitizenDto.toString());
 		
@@ -84,7 +84,7 @@ public class DeliveryOrderCitizenService {
 			logger.debug("DeliveryOrderCitizenService - insertDeliveryOrderCitizenSelectAddress - deliveryOrderCitizenDto : " + returnAdminagencyAddress.toString());
 			map.put("returnCitizenAddress", returnCitizenAddress);
 			map.put("returnAdminagencyAddress", returnAdminagencyAddress);
-		//대여배달
+		//대여배달 준희몫
 		}else if(deliveryOrderCitizenDto.getClassifyRentalState().equals("대여")) {
 			//returnDeliveryOrderCitizenDto = deliveryOrderCitizenDao.insertDeliveryOrderCitizenSelectAddress(deliveryOrderCitizenDto);
 		}

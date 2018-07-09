@@ -5,7 +5,9 @@
   <!-- /* 27기 koogle 이인호 */ -->
 <mapper namespace="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenMapper">
 	
-	<insert id="insertDeliveryOrderCitizen" parameterType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto">
+	<!-- 배달신청등록 기능 -->
+	<insert id="insertDeliveryOrderCitizen" 
+	parameterType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto">
 		INSERT INTO delivery_order_citizen
 			(delivery_order_citizen_code
 			, goodsfacility_rental_code
@@ -41,6 +43,7 @@
 			, 'N')
 	</insert>
 	
+	<!-- 배달신청조회 기능 -->
 	<select id="selectListMyDeliveryOrderCitizen" parameterType="String" resultType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto">
 		SELECT
 			delivery_order_citizen_code as deliveryOrderCitizenCode
@@ -64,7 +67,10 @@
 		ORDER BY delivery_order_citizen_date DESC	
 	</select>
 	
-	<select id="updateViewDeliveryOrderCitizenAddress" parameterType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto" resultType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto">
+	<!-- 신청한 배달의 주소지를 수정하는 화면으로 이동 -->
+	<select id="updateViewDeliveryOrderCitizenAddress" 
+		parameterType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto" 
+		resultType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto">
 		SELECT
 			delivery_order_citizen_code as deliveryOrderCitizenCode
 			, goodsfacility_rental_code as goodsfacilityRentalCode
@@ -86,7 +92,9 @@
 			where delivery_order_citizen_code = #{deliveryOrderCitizenCode}
 	</select>
 	
-	<update id="updateDeliveryOrderCitizenAddress" parameterType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto">
+	<!-- 신청한 배달의 주소지 수정기능 -->
+	<update id="updateDeliveryOrderCitizenAddress" 
+		parameterType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto">
 		UPDATE delivery_order_citizen
 			SET		
 			send_address_sido=#{sendAddressSido}
@@ -100,13 +108,16 @@
 		WHERE delivery_order_citizen_code= #{deliveryOrderCitizenCode}
 	</update>
 	
-	<update id="updateIsCanceledDelivery" parameterType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto">
+	<!-- 배달신청을 취소하는 기능 -->
+	<update id="updateIsCanceledDelivery" 
+		parameterType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto">
 		UPDATE delivery_order_citizen
 			SET		
 			is_canceled_delivery = 'Y'
 		WHERE delivery_order_citizen_code= #{deliveryOrderCitizenCode}	
 	</update>
 	
+	<!-- 공무원이 시민의 배달신청을 조회 -->
 	<select id="selectListDeliveryOrderCitizen" parameterType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto" resultType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto">
 		SELECT
 			delivery_order_citizen_code as deliveryOrderCitizenCode
@@ -130,7 +141,10 @@
 		ORDER BY delivery_order_citizen_date DESC
 	</select>
 	
-	<select id="insertDeliveryOrderCitizenAddressSelect" parameterType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto" resultType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto">
+	<!-- 배달을 신청하는 시민의 주소를 보내는 사람 주소에 셋팅 -->
+	<select id="insertDeliveryOrderCitizenAddressSelect" 
+		parameterType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto" 
+		resultType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto">
 		select
 			citizen.sido_name as sendAddressSido
 			,citizen.sigungu_name as sendAddressSigungu
@@ -140,7 +154,10 @@
 			where citizen_id = #{citizenId}	
 	</select>
 	
-	<select id="insertDeliveryOrderAdminagencyAddressSelect" parameterType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto" resultType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto">
+	<!-- 배달시킬 행정기관의 주소를 받는 사람 주소에 셋팅 -->
+	<select id="insertDeliveryOrderAdminagencyAddressSelect" 
+		parameterType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto" 
+		resultType="kr.or.nationRental.deliveryOrderCitizen.service.DeliveryOrderCitizenDto">
 		SELECT
 			adminagency.sido_name as receiveAddressSido
 			,adminagency.sigungu_name as receiveAddressSigungu

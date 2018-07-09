@@ -23,6 +23,7 @@
 			일반 컬럼과 pk 구분 가능 pk 칼럼에게는 result 아닌 id 사용
 		-->
   	
+  	<!-- 연회비패키지가 적용되는 행정기관의 데이터를 setting 하기 위한 resultMap -->
   	<resultMap type="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto" id="annualfeePakageDto">
 		<id column="annualfee_pakage_code" property="annualfeePakageCode" />
 		<result column="functionary_id" property="functionaryId" />
@@ -38,8 +39,11 @@
 		</collection>
 	</resultMap>  	
   	
-  	<insert id="insertAnnualfeePakage" parameterType="kr.or.nationRental.agency.service.AgencyDto">
-  		  
+  	<!-- 연회비패키지정보 insert -->
+  	<insert id="insertAnnualfeePakage" 
+  		parameterType="kr.or.nationRental.agency.service.AgencyDto">
+  		 
+  		<!-- 쿼리문이 실행된 후 만들어지는 insert id를 select하여 리턴하는 쿼리문 --> 
 		<selectKey resultType="int" keyProperty="annualfeePakageCode" order="AFTER">  
 		       SELECT LAST_INSERT_ID()				
 		</selectKey>
@@ -63,36 +67,23 @@
 			
   	</insert>
   	
-  	<insert id="insertAnnualfeePakageAuthority" parameterType="java.util.Map">
+  	<!-- 연회비패키지 적용 행정기관 insert -->
+  	<!-- annualfee_pakage_authority테이블의 추가한 행정기관 데이터 insert처리 -->
+  	<insert id="insertAnnualfeePakageAuthority"
+  		parameterType="java.util.Map">
   		INSERT INTO annualfee_pakage_authority
 				(annualfee_pakage_authority_code
 				,annualfee_pakage_code
 				,adminagency_code)
 			VALUES (NULL
 				,#{annualfeePakageCode}
-				,#{adminagencyCode})
-  	
+				,#{adminagencyCode})  	
   	</insert>
   	
-  
-  	<select id="totalCountAnnualfeePakage"
-			parameterType="java.util.Map"
-			resultType="Integer">
-		SELECT
-		COUNT(*)
-			FROM annualfee_pakage
-			<choose>	      
-		        <when test="searchOption == 'all'">    
-		        	where annualfee_pakage_name like CONCAT('%', #{keyword}, '%')
-		        	or annualfee_pakage_text_sangse like CONCAT('%', #{keyword}, '%')		        	        	           
-		        </when>
-		        <otherwise>
-		        	where #{searchOption} like CONCAT('%', #{keyword}, '%')	        
-		        </otherwise>
-	    	</choose>
-	</select>
-	
-	<select id="selectListAnnualfeePakage" parameterType="java.util.Map"  resultType="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto">
+  	<!-- 연회비패키지를 select해 List로 받음 -->
+  	<select id="selectListAnnualfeePakage" 
+  		parameterType="java.util.Map"  
+  		resultType="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto">
 		SELECT
 				annualfee_pakage_code as annualfeePakageCode
 				,functionary_id as functionaryId
@@ -116,23 +107,29 @@
 		ORDER BY annualfee_pakage_date_registration DESC
 		LIMIT #{beginRow}, #{pagePerRow}
 	</select>
-	
-	<select id="selectListAnnualfeePakageOwnership" parameterType="String" resultType="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto">
+  	
+  	<!-- select한 연회비패키지의 총갯수 -->
+  	<select id="totalCountAnnualfeePakage"
+			parameterType="java.util.Map"
+			resultType="Integer">
 		SELECT
-				annualfee_pakage_code as annualfeePakageCode
-				,functionary_id as functionaryId
-				,annualfee_pakage_name as annualfeePakageName
-				,annualfee_pakage_price as annualfeePakagePrice
-				,annualfee_pakage_text_sangse as annualfeePakageTextSangse
-				,annualfee_pakage_discount_rate as annualfeePakageDiscountRate
-				,annualfee_pakage_date_registration as annualfeePakageDateRegistration
+		COUNT(*)
 			FROM annualfee_pakage
-			join annualfee_pakage_ownership
-				using(annualfee_pakage_code)
-				where annualfee_pakage_ownership.citizen_id = #{memeberId}
+			<choose>	      
+		        <when test="searchOption == 'all'">    
+		        	where annualfee_pakage_name like CONCAT('%', #{keyword}, '%')
+		        	or annualfee_pakage_text_sangse like CONCAT('%', #{keyword}, '%')		        	        	           
+		        </when>
+		        <otherwise>
+		        	where #{searchOption} like CONCAT('%', #{keyword}, '%')	        
+		        </otherwise>
+	    	</choose>
 	</select>
 	
-	<select id="annualfeePakageSangse" parameterType="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto" resultMap="annualfeePakageDto">
+	<!-- 연회비패키지 상세보기 -->
+	<select id="annualfeePakageSangse" 
+		parameterType="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto" 
+		resultMap="annualfeePakageDto">
 		SELECT
 			annualfee_pakage.annualfee_pakage_code
 			,annualfee_pakage.functionary_id
@@ -152,19 +149,25 @@
 		where annualfee_pakage_code = #{annualfeePakageCode}
 	</select>
 	
-	<delete id="deleteAnnualfeePakage" parameterType="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto">
+	<!-- 연회비패키지정보 삭제처리 -->
+	<delete id="deleteAnnualfeePakage" 
+		parameterType="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto">
 		DELETE 
 			FROM annualfee_pakage 
 			WHERE annualfee_pakage_code= #{annualfeePakageCode}
 	</delete>
 	
-	<delete id="deleteAnnualfeePakageAuthority" parameterType="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto">
+	<!-- 연회비패키지 적용 행정기관 삭제처리 -->
+	<delete id="deleteAnnualfeePakageAuthority" 
+		parameterType="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto">
 		DELETE 
 			FROM annualfee_pakage_authority 
 			WHERE annualfee_pakage_code= #{annualfeePakageCode}
 	</delete>
 	
-	<update id="updateAnnualfeePakage" parameterType="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto">
+	<!-- annualfee_pakage테이블의 데이터 update 처리 -->
+	<update id="updateAnnualfeePakage" 
+		parameterType="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto">
 		UPDATE annualfee_pakage
 			SET
 		annualfee_pakage_name=#{annualfeePakageName},
@@ -174,13 +177,17 @@
 			WHERE annualfee_pakage_code=#{annualfeePakageCode}	
 	</update>
 	
-	<delete id="deleteCheckAnnualfeePakageAuthority" parameterType="Integer">
+	<!-- annualfee_pakage_authority테이블의 삭제한 행정기관 데이터 delete처리 -->
+	<delete id="deleteCheckAnnualfeePakageAuthority" 
+		parameterType="Integer">
 		DELETE 
 			FROM annualfee_pakage_authority 
 			WHERE annualfee_pakage_authority_code= #{integer}
 	</delete>
 	
-	<insert id="insertAnnualfeePakageOwnership" parameterType="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto">
+	<!-- 연회비 구입 -->
+	<insert id="insertAnnualfeePakageOwnership" 
+		parameterType="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto">
 		INSERT INTO annualfee_pakage_ownership
 				(annualfee_pakage_ownership_code
 				,citizen_id
@@ -190,5 +197,21 @@
 				,#{annualfeePakageCode})	
 	</insert>
 	
-	
+	<!-- 시민이 자신이 구입한 연회비패키지 보기 -->
+	<select id="selectListAnnualfeePakageOwnership" 
+		parameterType="String" 
+		resultType="kr.or.nationRental.annualfeePakage.service.AnnualfeePakageDto">
+		SELECT
+				annualfee_pakage_code as annualfeePakageCode
+				,functionary_id as functionaryId
+				,annualfee_pakage_name as annualfeePakageName
+				,annualfee_pakage_price as annualfeePakagePrice
+				,annualfee_pakage_text_sangse as annualfeePakageTextSangse
+				,annualfee_pakage_discount_rate as annualfeePakageDiscountRate
+				,annualfee_pakage_date_registration as annualfeePakageDateRegistration
+			FROM annualfee_pakage
+			join annualfee_pakage_ownership
+				using(annualfee_pakage_code)
+				where annualfee_pakage_ownership.citizen_id = #{memeberId}
+	</select>	
  </mapper>

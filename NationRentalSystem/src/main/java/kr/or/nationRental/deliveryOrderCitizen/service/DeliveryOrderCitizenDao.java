@@ -23,6 +23,7 @@ public class DeliveryOrderCitizenDao {
 		logger.debug("DeliveryOrderCitizenDao - insertDeliveryOrderCitizen - deliveryOrderCitizenDto : " + deliveryOrderCitizenDto.toString());
 		sqlSession.insert(NS+"insertDeliveryOrderCitizen", deliveryOrderCitizenDto);
 	}
+	
 	//배달신청조회 기능
 	public List<DeliveryOrderCitizenDto> selectListMyDeliveryOrderCitizen(String memberId) {
 		logger.debug("DeliveryOrderCitizenDao - selectListMyDeliveryOrderCitizen - memberId : " + memberId.toString());
@@ -35,7 +36,7 @@ public class DeliveryOrderCitizenDao {
 		return sqlSession.selectOne(NS+"updateViewDeliveryOrderCitizenAddress", deliveryOrderCitizenDto);
 	}
 	
-	//신청한 배달의 주소지를 수정기능
+	//신청한 배달의 주소지 수정기능
 	public void updateDeliveryOrderCitizenAddress(DeliveryOrderCitizenDto deliveryOrderCitizenDto) {
 		logger.debug("DeliveryOrderCitizenDao - updateDeliveryOrderCitizenAddress - deliveryOrderCitizenDto : " + deliveryOrderCitizenDto.toString());
 		sqlSession.update(NS+"updateDeliveryOrderCitizenAddress", deliveryOrderCitizenDto);		
@@ -54,14 +55,14 @@ public class DeliveryOrderCitizenDao {
 		return sqlSession.selectList(NS+"selectListDeliveryOrderCitizen", deliveryOrderCitizenDto);		
 	}
 	
-	//배달을 신청하는 시민의 주소를 보내는 사람 주소에 셋팅하는 Dao
+	//배달을 신청하는 시민의 주소를 보내는 사람 주소에 셋팅
 	public DeliveryOrderCitizenDto insertDeliveryOrderCitizenAddressSelect(
 			DeliveryOrderCitizenDto deliveryOrderCitizenDto) {
 		logger.debug("DeliveryOrderCitizenDao - insertDeliveryOrderCitizenAddressSelect - deliveryOrderCitizenDto : " + deliveryOrderCitizenDto.toString());
 		return sqlSession.selectOne(NS+"insertDeliveryOrderCitizenAddressSelect", deliveryOrderCitizenDto);
 	}
 	
-	//배달시킬 행정기관의 주소를 받는 사람 주소에 셋팅Dao
+	//배달시킬 행정기관의 주소를 받는 사람 주소에 셋팅
 	public DeliveryOrderCitizenDto insertDeliveryOrderAdminagencyAddressSelect(
 			DeliveryOrderCitizenDto deliveryOrderCitizenDto) {
 		logger.debug("DeliveryOrderCitizenDao - insertDeliveryOrderAdminagencyAddressSelect - deliveryOrderCitizenDto : " + deliveryOrderCitizenDto.toString());

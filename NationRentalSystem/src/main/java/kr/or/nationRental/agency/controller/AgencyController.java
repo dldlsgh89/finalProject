@@ -74,7 +74,7 @@ public class AgencyController {
 	 * 단지 현재 계약되어있는 대행업체와 계약이 끝난 대행업체를 구분해줄 필요는 있다
 	 * 계약되어있는 대행업체는 계약해지날짜가 null
 	 * 계약되어있는 대행업체는 계약해지날짜가 notnull
-	 * 결국에 페이징, 검색처리를 생각하면 결국에 form을 나눠줘야할 것 같다
+	 * 결국에 페이징, 검색처리를 생각하면 form을 나눠줘야할 것 같다
 	 * 계약되어있는 대행업체는 언제나 소수임으로 페이징과 검색을 넣어주지 않고
 	 * 계약해지된 대행업체들을 쌓이고 쌓일수 있음으로 페이징과 검색을 넣어준다
 	 * 계약되어 있는 대행업체들을 해지될 수 있다
@@ -121,8 +121,7 @@ public class AgencyController {
 	@RequestMapping(value="/updateAgencyContractClosed", method=RequestMethod.GET)
 	public String updateAgencyContractClosed(AgencyDto agencyDto) {
 		logger.debug("AgencyController - updateAgencyContractClosed - agencyDto : " + agencyDto.toString());
-		agencyService.updateAgencyContractClosed(agencyDto);	
-		
+		agencyService.updateAgencyContractClosed(agencyDto);		
 		
 		return "redirect:/selectListContractClosedAgency";
 	}
@@ -130,21 +129,19 @@ public class AgencyController {
 	/*계약된 대행업체직원 조회
 	 *계약된 대행업체 조회 선행 후
 	 *현재 계약되어있는 대행업체중에 하나를 클릭하면
-	 *해당 대행업체에 소속된 직원들 볼 수 있음	 *
+	 *해당 대행업체에 소속된 직원들 볼 수 있음
 	 *단 해당 대행업체에 소속된 직원조회는 다른 패키지의 기능을 끌어올수 있다
 	 *다른 패키지의 기능과 다를것으로 예상되므로 먼저 만들어놓는다
 	 *조회에서 해당 해댕업체 클릭하는것까지는 선행 완료
-	 *클릭히 낙찰된 대행업체 코드가 넘어오는데
+	 *클릭시 낙찰된 대행업체 코드가 넘어오는데
 	 *해당 코드로 agency_nakchal_employee테이블을 먼저 select하여 코드에 속해있는 id를 가져온후
 	 *가져온 id로 agency_employee테이브을 select한다
 	 */	
 	@RequestMapping(value="/selectContractAgencyEmployee", method=RequestMethod.GET)
 	public String selectContractAgencyEmployee(AgencyDto agencyDto
 												,Model model) {
-		logger.debug("AgencyController - selectContractAgencyEmployee - agencyDto : " + agencyDto.toString());
-		
-		List<AgencyEmployeeDto> agencyEmployeeDto = agencyService.selectContractAgencyEmployee(agencyDto);		
-		
+		logger.debug("AgencyController - selectContractAgencyEmployee - agencyDto : " + agencyDto.toString());		
+		List<AgencyEmployeeDto> agencyEmployeeDto = agencyService.selectContractAgencyEmployee(agencyDto);	
 		model.addAttribute("agencyEmployeeDto", agencyEmployeeDto);
 		
 		return "/agency/selectContractAgencyEmployee";
