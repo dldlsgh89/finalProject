@@ -114,6 +114,7 @@ public class GoodsFacilityService {
 			goodsFacilityFile.setGoodsfacilityFileType(fileType);
 			goodsFacilityFile.setGoodsfacilityFileSize(doIndex);
 			logger.debug("goodsFacilityFile :" + goodsFacilityFile);
+			/*goodsFacilityDto에 있는 GoodsFacilityFile타입의 변수 goodsFacilityFile에 add를 해주는 것인데 */
 			goodsFacilityDto.getGoodsFacilityFile().add(goodsFacilityFile);
 			
 		}

@@ -60,5 +60,4 @@ public class GoodsFacilityFile {
 				+ goodsfacilityFileSize + ", dateUploadFile=" + dateUploadFile + "]";
 	}
 	
-	
 }

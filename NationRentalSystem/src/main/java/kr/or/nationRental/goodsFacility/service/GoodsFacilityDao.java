@@ -38,7 +38,7 @@ public class GoodsFacilityDao {
 	}
 
 	public int insertGoodsFacility(GoodsFacilityDto goodsFacilityDto) {
-		logger.debug("GoodsFacilityDao insertGoodsFacility");
+		logger.debug("GoodsFacilityDao insertGoodsFacility " + goodsFacilityDto);
 		
 		int row = sqlSession.insert(NS+"insertGoodsFacility", goodsFacilityDto);
 		return row;				
