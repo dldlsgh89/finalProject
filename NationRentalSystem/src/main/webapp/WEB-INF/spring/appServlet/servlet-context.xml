@@ -41,6 +41,19 @@
 		<!-- cafe24 올리기용 --> <property name="url" value="jdbc:mysql://leejt1062.cafe24.com/leejt1062?useUnicode=true&amp;characterEncoding=utf8"/>
 		<property name="username" value="leejt1062"/>
 		<property name="password" value="dlsgh9289/"/>
+		<property name="defaultAutoCommit" value="true" />
+		<!-- validationQuery:유효 검사용 쿼리( 1개 이상의 row를 반환하는 쿼리를 넣어주면 된다. ) -->
+		<property name="validationQuery" value="select 1"/>
+		<!-- testWhileIdle:컨넥션이 놀고 있을때 -_-; validationQuery 를 이용해서 유효성 검사를 할지 여부. -->
+		<property name="testWhileIdle" value="true"/>
+		<!-- timeBetweenEvictionRunsMillis:해당 밀리초마다 validationQuery 를 이용하여 유효성 검사 진행 -->
+		<property name="timeBetweenEvictionRunsMillis" value="7200000"/>
+		<!-- 퍼포먼스가 문제 될거라고 생각된다면 testOnBorrow true -> false  -->
+		<property name="testOnBorrow" value="false"/>
+		<!-- show processlist 쿼리를 실행해 웹어플리케이션을 구동하고, 
+		컨넥션이 맺어지도록 한 후에 해당 프로세스가 command 필드가 sleep 상태에서 Time 필드 값이 timeBetweenEvictionRunsMillis/1000 보다 커지지 않는다면, 
+		정상적으로 설정된 것이다.
+		 -->
 	</bean>
 	 
 	<!-- connection가진 tx기능을 spring에게 위임 -->
