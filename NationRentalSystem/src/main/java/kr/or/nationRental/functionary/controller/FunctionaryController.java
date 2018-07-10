@@ -38,23 +38,18 @@ public class FunctionaryController {
 		return "/functionary/insertFunctionaryForm";
 	}
 	
+	//공무원 가입
 	//공무원 가입화면에서 입력받은 데이터로 공무원기본정보테이블과 공무원이력관리테이블 두곳에 insert
-	//공무원 가입화면에서 필요한 처리
 	@RequestMapping(value="/insertFunctionary", method=RequestMethod.POST)
 	public String insertFunctionary(FunctionaryDto functionaryDto) {
 		logger.debug("FunctionaryController - insertFunctionary - functionaryDto : " + functionaryDto.toString());
 		
 		functionaryService.insertFunctionary(functionaryDto);
 		
-		return "redirect:/selectListFunctionary";
+		return "redirect:/joinCongratulation";
 	}
 	
-	@RequestMapping(value="/idcehck", method=RequestMethod.GET)
-	public String idcehck() {
-			
-		return "/functionary/insertFunctionaryForm";
-	}
-	
+	//공무원 조회리스트
 	@RequestMapping(value="/selectListFunctionary", method=RequestMethod.GET)
 	public String selectListFunctionary(Model model
 										,@RequestParam(value="currentPage", defaultValue="1") int currentPage
@@ -94,31 +89,32 @@ public class FunctionaryController {
 		return "/functionary/viewFunctionaryInfo";
 	}
 	
-	/*공무원 정보 수정
-	 * 프로세스 목표
-	 * 공무원 기본정보를 수정하고
-	 * 만약 행정기관코드를 수정하면
-	 * 이력관리 테이블에 직전까지 존재하던 데이터를 수정하고
-	 * 새롭게 등록한 행정기관코드로 새 이력을 등록한다
-	 * 매서드 방향
-	 * 콘트롤러에서 서비스로 수정한 데이터 전송
-	 * 서비스에서 먼저 해당 아이디로 이력관리테이블 조회
-	 * 조회해서 가장 근래에 등록된 행정기관코드가 현재 등록코드와 같은지 비교
-	 * 같지 않다면 이력관리테이블에 가장 근래에 등록된 데이터를 수정하여 전출날짜와 현재 상태를 전출로 수정
-	 * 이후 기본정보데이터 수정과 새로운 이력관리 데이터 등록
-	 * 공무원 기본정보조회로 리다이렉트
-	 * */
-	@RequestMapping(value="/updateFunctionnary", method=RequestMethod.GET)
+	//공무원 정보 수정 화면이동
+	@RequestMapping(value="/updateFunctionnaryForm", method=RequestMethod.GET)
 	public String updateFunctionnary(@RequestParam(value="functionaryId") String functionaryId
 												,Model model) {
-		logger.debug("FunctionaryController - updateFunctionnary - get - functionaryId : " + functionaryId.toString());
+		logger.debug("FunctionaryController - updateFunctionnaryForm - get - functionaryId : " + functionaryId.toString());
 		FunctionaryDto returnfunctionaryDto = functionaryService.viewFunctionaryInfo(functionaryId);
-		logger.debug("FunctionaryController - updateFunctionnary - get - returnfunctionaryDto : " + returnfunctionaryDto.toString());
+		logger.debug("FunctionaryController - updateFunctionnaryForm - get - returnfunctionaryDto : " + returnfunctionaryDto.toString());
 		model.addAttribute("returnfunctionaryDto", returnfunctionaryDto);
 		
 		return "/functionary/updateFunctionnaryForm";
 	}
 	
+	/*공무원 정보 수정
+	 * 프로세스 목표
+	 * 공무원 기본정보를 수정하고
+	 * 만약 행정기관을 수정하면
+	 * 이력관리 테이블에 직전까지 존재하던 데이터를 수정하고
+	 * 새롭게 등록한 행정기관코드로 새 이력을 등록한다
+	 * 매서드 방향
+	 * 콘트롤러에서 서비스로 수정한 데이터 전송
+	 * 서비스에서 먼저 해당 아이디로 이력관리테이블 조회
+	 * 조회해서 가장 근래에 등록된 행정기관코드가 현재 insert코드와 같은지 비교
+	 * 같지 않다면 이력관리테이블에 가장 근래에 등록된 데이터를 수정하여 전출날짜와 현재 상태를 전출로 수정
+	 * 이후 기본정보데이터 수정과 새로운 이력관리 데이터 등록
+	 * 공무원 기본정보조회로 리다이렉트
+	 * */
 	@RequestMapping(value="/updateFunctionnary", method=RequestMethod.POST)
 	public String updateFunctionnary(FunctionaryDto functionaryDto
 											,Model model) {
@@ -129,7 +125,8 @@ public class FunctionaryController {
 	}
 	
 	
-	/*탈퇴처리에 필요한 기능들
+	/*공무원 탈퇴
+	 * 탈퇴처리에 필요한 기능들
 	 * 공무원 회원 정보 테이블에서 delete 처리
 	 * 1번 공무원 이력관리 테이블에서 가장 최근에 등록한 데이터 수정 처리
 	 * 탈퇴공무원 데이터 1년저장 테이블에 insert 처리

@@ -14,7 +14,7 @@
 					$(location).attr('href', './viewFunctionaryInfo?functionaryId=' + $('#memberId').val());
 				});
 				$('#updateFunctionaryBtn').click(function(){
-					$(location).attr('href', './updateFunctionnary?functionaryId=' + $('#memberId').val());
+					$(location).attr('href', './updateFunctionnaryForm?functionaryId=' + $('#memberId').val());
 				});
 				$('#selectFunctionaryBtn').click(function(){
 					$(location).attr('href', './selectListFunctionary?functionaryId=' + $('#memberId').val());

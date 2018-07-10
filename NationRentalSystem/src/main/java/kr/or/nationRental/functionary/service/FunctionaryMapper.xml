@@ -5,9 +5,12 @@
   <!-- /* 27기 koogle 이인호 */ -->
   
 <mapper namespace="kr.or.nationRental.functionary.service.FunctionaryMapper">
-	<insert id="insertFunctionary" parameterType="kr.or.nationRental.functionary.service.FunctionaryDto">
-		
-		INSERT INTO functionary
+	
+	<!-- 공무원 기본정보 insert -->
+	<insert id="insertFunctionary" 
+		parameterType="kr.or.nationRental.functionary.service.FunctionaryDto">		
+		INSERT 
+		INTO functionary
 			(functionary_id 
 			,adminagency_code 
 			,functionary_num
@@ -17,18 +20,20 @@
 			,functionary_email 
 			,functionary_date_join)
 		VALUES (#{functionaryId}
-				,#{adminagencyCode}
-				,#{functionaryNum}
-				,#{functionaryPw}
-				,#{functionaryName}
-				,#{functionaryPhone} 
-				,#{functionaryEmail} 
-				,NOW())
-		
+			,#{adminagencyCode}
+			,#{functionaryNum}
+			,#{functionaryPw}
+			,#{functionaryName}
+			,#{functionaryPhone} 
+			,#{functionaryEmail} 
+			,NOW())		
 	</insert>
 	
-	<insert id="insertFunctionaryMoveInout" parameterType="kr.or.nationRental.functionary.service.FunctionaryDto">
-		INSERT INTO functionary_move_inout
+	<!-- 공무원 전출이력정보 insert -->
+	<insert id="insertFunctionaryMoveInout" 
+		parameterType="kr.or.nationRental.functionary.service.FunctionaryDto">
+		INSERT 
+		INTO functionary_move_inout
 			(functionary_move_inout_code
 			,adminagency_code
 			,functionary_id
@@ -37,38 +42,18 @@
 			,functionary_date_move_out
 			,functionary_state_work)
 		VALUES (null
-				,#{adminagencyCode}
-				,#{functionaryId}
-				,#{functionaryName}
-				, NOW()
-				, null
-				, '근무중')
-						
+			,#{adminagencyCode}
+			,#{functionaryId}
+			,#{functionaryName}
+			, NOW()
+			, null
+			, '근무중')						
 	</insert>	
 	
-	<select id="totalCountFunctionary"
-			parameterType="java.util.Map"
-			resultType="Integer">
-		SELECT
-		COUNT(*)
-			FROM functionary
-			inner join adminagency
-				using(adminagency_code)					
-			<choose>	      
-		        <when test="searchOption == '전체 검색'">    
-		        	where functionary.functionary_name like CONCAT('%', #{keyword}, '%')
-		        	or adminagency.adminagency_name like CONCAT('%', #{keyword}, '%')		        	        	           
-		        </when>
-		        <when test="searchOption == '공무원 이름 검색'">    
-		        	where functionary.functionary_name like CONCAT('%', #{keyword}, '%')	        	        	           
-		        </when>
-		        <when test="searchOption == '소속 행정기관 검색'"> 
-		        	where adminagency.adminagency_name like CONCAT('%', #{keyword}, '%')		        	        	           
-		        </when>
-	    	</choose>
-	</select>
-	
-	<select id="selectListFunctionary" parameterType="java.util.Map"  resultType="kr.or.nationRental.functionary.service.FunctionaryDto">
+	<!-- 공무원 조회리스트 -->
+	<select id="selectListFunctionary" 
+		parameterType="java.util.Map"  
+		resultType="kr.or.nationRental.functionary.service.FunctionaryDto">
 		SELECT
 				functionary.functionary_id as functionaryId
 				,functionary.adminagency_code as adminagencyCode
@@ -98,7 +83,33 @@
 		LIMIT #{beginRow}, #{pagePerRow}
 	</select>
 	
-	<select id="viewFunctionaryInfo" parameterType="String" resultType="kr.or.nationRental.functionary.service.FunctionaryDto">
+	<!-- 공무원 조회리스트의 총 데이터 갯수 -->	
+	<select id="totalCountFunctionary"
+			parameterType="java.util.Map"
+			resultType="Integer">
+		SELECT
+		COUNT(*)
+			FROM functionary
+			inner join adminagency
+				using(adminagency_code)					
+			<choose>	      
+		        <when test="searchOption == '전체 검색'">    
+		        	where functionary.functionary_name like CONCAT('%', #{keyword}, '%')
+		        	or adminagency.adminagency_name like CONCAT('%', #{keyword}, '%')		        	        	           
+		        </when>
+		        <when test="searchOption == '공무원 이름 검색'">    
+		        	where functionary.functionary_name like CONCAT('%', #{keyword}, '%')	        	        	           
+		        </when>
+		        <when test="searchOption == '소속 행정기관 검색'"> 
+		        	where adminagency.adminagency_name like CONCAT('%', #{keyword}, '%')		        	        	           
+		        </when>
+	    	</choose>
+	</select>
+	
+	<!-- 공무원 기본정보조회 -->
+	<select id="viewFunctionaryInfo" 
+		parameterType="String" 
+		resultType="kr.or.nationRental.functionary.service.FunctionaryDto">
 			SELECT
 				functionary.functionary_id as functionaryId
 				,adminagency.adminagency_code as adminagencyCode
@@ -115,7 +126,9 @@
 			where functionary_id = #{functionaryId}		
 	</select>
 	
-	<update id="updateFunctionnary" parameterType="kr.or.nationRental.functionary.service.FunctionaryDto">		
+	<!-- 공무원 기본정보 수정 -->
+	<update id="updateFunctionnary" 
+		parameterType="kr.or.nationRental.functionary.service.FunctionaryDto">		
 		UPDATE functionary
 				SET
 			functionary_id = #{functionaryId}
@@ -126,9 +139,13 @@
 		WHERE functionary_id=#{functionaryId}
 	</update>
 	
-	<select id="selectFunctionaryMoveInout" parameterType="String" resultType="kr.or.nationRental.functionary.service.FunctionaryDto">
+	<!-- 아이디로 이력관리테이블 조회	 -->
+	<select id="selectFunctionaryMoveInout" 
+		parameterType="String" 
+		resultType="kr.or.nationRental.functionary.service.FunctionaryDto">
 		SELECT
 			   functionary_move_inout_code as functionaryMoveInoutCode
+			   ,adminagency_code as adminagencyCode
 			FROM
 			    functionary_move_inout
 			where functionary_id = #{functionaryId}
@@ -137,7 +154,9 @@
 			    limit 1
 	</select>
 	
-	<update id="updateFuctionaryMoveInout" parameterType="kr.or.nationRental.functionary.service.FunctionaryDto">		
+	<!-- 공무원 이전 전출이력정보 수정 -->
+	<update id="updateFuctionaryMoveInout" 
+		parameterType="kr.or.nationRental.functionary.service.FunctionaryDto">		
 		UPDATE functionary_move_inout
 				SET
 			functionary_date_move_out = now()
@@ -145,7 +164,10 @@
 		WHERE functionary_move_inout_code = #{functionaryMoveInoutCode}
 	</update>
 	
-	<select id="selectAdminagency" parameterType="String" resultType="kr.or.nationRental.functionary.service.FunctionaryDto">
+	<!-- 행정기관 검색 -->
+	<select id="selectAdminagency" 
+		parameterType="String" 
+		resultType="kr.or.nationRental.functionary.service.FunctionaryDto">
 		SELECT
 			adminagency_code as adminagencyCode
 			,adminagency_name as adminagencyName			
@@ -153,13 +175,17 @@
 		where adminagency_name like CONCAT('%', #{checkAdminagency}, '%')	
 	</select>
 	
-	<delete id="deleteFunctionnary" parameterType="String">
+	<!-- 공무원 탈퇴 -->
+	<delete id="deleteFunctionnary" 
+		parameterType="String">
 		DELETE 
 			FROM functionary 
 			WHERE functionary_id=#{functionaryId}	
 	</delete>
 	
-	<insert id="insertStorageFunctionary" parameterType="kr.or.nationRental.functionary.service.FunctionaryDto">
+	<!-- 탈퇴공무원정보 등록 -->
+	<insert id="insertStorageFunctionary" 
+		parameterType="kr.or.nationRental.functionary.service.FunctionaryDto">
 		
 		INSERT INTO storage_functionary
 			(storage_functionary_id 
@@ -183,6 +209,7 @@
 	
 	</insert>
 	
+	<!-- 공무원 대여물품/시설등록한 업무조회 카운트 -->
 	<select id="totalCountFunctionaryWorkGoodsfacility"
 			parameterType="java.util.Map"
 			resultType="Integer">
@@ -209,7 +236,10 @@
 	    	</choose>
 	</select>
 	
-	<select id="selectListFunctionaryWorkGoodsfacility" parameterType="java.util.Map"  resultType="kr.or.nationRental.goodsFacility.service.GoodsFacilityDto">
+	<!-- 공무원 대여물품/시설등록한 업무조회 -->
+	<select id="selectListFunctionaryWorkGoodsfacility" 
+		parameterType="java.util.Map"  
+		resultType="kr.or.nationRental.goodsFacility.service.GoodsFacilityDto">
 		SELECT
 			goodsfacility.goodsfacility_code as goodsfacilityCode
 			,goodsfacility.goodsfacility_name as goodsfacilityName
@@ -250,10 +280,10 @@
 			LIMIT #{beginRow}, #{pagePerRow}
 	</select>
 		
-	
+	<!-- //공무원 반납등록 업무조회 -->
 	<select id="selectListFunctionaryWorkReturnGoodsfacilityInfo" 
-	parameterType="java.util.Map" 
-	resultType="kr.or.nationRental.returnGoodsfacilityInfo.service.ReturnGoodsfacilityInfoDto">
+		parameterType="java.util.Map" 
+		resultType="kr.or.nationRental.returnGoodsfacilityInfo.service.ReturnGoodsfacilityInfoDto">
 		SELECT
 			return_goodsfacility_info.return_goodsfacility_info_code as returnGoodsfacilityInfoCode
 			,return_goodsfacility_info.goodsfacility_code as goodsfacilityCode
@@ -296,6 +326,7 @@
 			LIMIT #{beginRow}, #{pagePerRow}
 	</select>
 	
+	<!-- 공무원 반납등록 업무조회 카운트 -->
 	<select id="totalCountFunctionaryWorkReturnGoodsfacilityInfo"
 			parameterType="java.util.Map"
 			resultType="Integer">
@@ -327,9 +358,10 @@
 	    	</choose>
 	</select>
 		
+	<!-- 공무원 AS의뢰신청업무조회 -->	
 	<select id="selectListFunctionaryWorkUnitedAfterserviceRequest" 
-	parameterType="java.util.Map" 
-	resultType="kr.or.nationRental.unitedAfterserviceRequest.service.UnitedAfterserviceRequestDto">
+		parameterType="java.util.Map" 
+		resultType="kr.or.nationRental.unitedAfterserviceRequest.service.UnitedAfterserviceRequestDto">
 		SELECT
 			united_afterservice_request.united_afterservice_request_code as unitedAfterserviceRequestCode
 			,(case 
@@ -385,15 +417,16 @@
 		LIMIT #{beginRow}, #{pagePerRow}			
 	</select>
 	
+	<!-- 공무원 AS의뢰신청 업무조회 카운트 -->
 	<select id="totalCountFunctionaryWorkUnitedAfterserviceRequest"
-			parameterType="java.util.Map"
-			resultType="Integer">
+		parameterType="java.util.Map"
+		resultType="Integer">
 		SELECT
 			COUNT(*)
-			from united_afterservice_request
-			inner join adminagency
-		 		using(adminagency_code)
-			where united_afterservice_request.functionary_id = #{functionaryDto.functionaryId}					
+		from united_afterservice_request
+		inner join adminagency
+	 		using(adminagency_code)
+		where united_afterservice_request.functionary_id = #{functionaryDto.functionaryId}					
 			<choose>	      
 		        <when test="searchOption == '전체 검색'">    
 		        	AND (united_afterservice_request.goodsfacility_name like CONCAT('%', #{keyword}, '%')
@@ -422,9 +455,10 @@
 	    	</choose>	
 	</select>
 	
+	<!-- 공무원 대행업체 등록 조회 -->
 	<select id="selectListFunctionaryWorkAgency" 
-	parameterType="java.util.Map" 
-	resultType="kr.or.nationRental.agency.service.AgencyDto">
+		parameterType="java.util.Map" 
+		resultType="kr.or.nationRental.agency.service.AgencyDto">
 		SELECT
 			agency.agency_code as agencyCode
 			,agency.adminagency_code as adminagencyCode
@@ -440,7 +474,7 @@
 		    using(functionary_name)
 		inner join adminagency
 			on agency.adminagency_code = adminagency.adminagency_code
-			where functionary.functionary_id = #{functionaryDto.functionaryId}
+		where functionary.functionary_id = #{functionaryDto.functionaryId}
 		<choose>	      
 	        <when test="searchOption == '전체 검색'">    
 	        	AND (adminagency.adminagency_name like CONCAT('%', #{keyword}, '%')
@@ -457,9 +491,10 @@
 		LIMIT #{beginRow}, #{pagePerRow}	
 	</select>
 	
+	<!-- 공무원 대행업체등록 업무조회 카운트 -->
 	<select id="totalCountFunctionaryWorkAgency"
-			parameterType="java.util.Map"
-			resultType="Integer">
+		parameterType="java.util.Map"
+		resultType="Integer">
 		SELECT
 			COUNT(*)
 			from functionary
@@ -511,9 +546,10 @@
 		</collection>
 	</resultMap>
 	
+	<!-- 공무원 연회비/패키지 등록 조회 -->
 	<select id="selectListFunctionaryWorkAnnualfeePakage" 
-	parameterType="java.util.Map" 
-	resultMap="annualfeePakageDto">
+		parameterType="java.util.Map" 
+		resultMap="annualfeePakageDto">
 		SELECT
 			annualfee_pakage.annualfee_pakage_code
 			,annualfee_pakage.annualfee_pakage_name
@@ -545,9 +581,10 @@
 			LIMIT #{beginRow}, #{pagePerRow}
 	</select>
 	
+	<!-- 공무원 연회비/패키지등록 업무조회 카운트 -->
 	<select id="totalCountFunctionaryWorkAnnualfeePakage"
-			parameterType="java.util.Map"
-			resultType="Integer">
+		parameterType="java.util.Map"
+		resultType="Integer">
 		SELECT
 			COUNT(*)
 			from annualfee_pakage

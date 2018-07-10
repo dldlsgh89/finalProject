@@ -72,7 +72,7 @@
 									<label class="col-sm-2 control-label">소속행정기관</label>
 									<div class="col-sm-10">
 										<div class="input-group">
-											<input hidden="hidden" id="adminagencyCode" name="adminagencyCode">
+											<input hidden="hidden" id="adminagencyCode" name="adminagencyCode" value="${returnfunctionaryDto.adminagencyCode}">											
 											<input type="text" class="form-control" id="adminagencyName" name="adminagencyName" value="${returnfunctionaryDto.adminagencyName}" readonly="readonly">
 											<span class="input-group-btn">
 												<button type="button" id="myModalclick" class="btn btn-primary" data-toggle="modal" data-target="#adminagencyCheckModal">행정기관찾기</button>

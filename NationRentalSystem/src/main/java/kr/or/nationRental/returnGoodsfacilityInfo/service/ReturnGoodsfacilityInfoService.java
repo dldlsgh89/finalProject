@@ -34,10 +34,10 @@ public class ReturnGoodsfacilityInfoService {
 		logger.debug("ReturnGoodsfacilityInfoService - returnGoodsfacilityInfoCheck - returnGoodsfacilityInfoDto : " + returnGoodsfacilityInfoDto.toString());
 		
 		//이미 반납된 물품인지 확인하기 위해 대여/예약코드로 반납 데이터베이스에 등록된 정보가 있는지 확인
-		int checkreturnGoodsfacilityInfo = returnGoodsfacilityInfoDao.checkreturnGoodsfacilityInfo(returnGoodsfacilityInfoDto);
+		int checkreturnGoodsfacilityInfo = returnGoodsfacilityInfoDao.checkReturnGoodsfacilityInfo(returnGoodsfacilityInfoDto);
 		logger.debug("ReturnGoodsfacilityInfoService - returnGoodsfacilityInfoCheck - checkreturnGoodsfacilityInfo : " + checkreturnGoodsfacilityInfo);
 		if(checkreturnGoodsfacilityInfo == 0) {
-			//배달반납 신청유무가 반납등록에 왜 필요한지 모르겠으나 배달반납 신청유무를 구하기 위한 코드
+			//배달반납 신청유무를 구하기 위한 코드
 			int IsOrderedDelivery = returnGoodsfacilityInfoDao.selectOneGoodsfacilityRentalIsOrderedDelivery(returnGoodsfacilityInfoDto.getGoodsfacilityRentalCode());
 			if(IsOrderedDelivery == 0) {
 				returnGoodsfacilityInfoDto.setIsRequestedToReturnAsDelivery("N");
@@ -65,29 +65,21 @@ public class ReturnGoodsfacilityInfoService {
 			System.out.println("huTimeYear" + huTimeYear);
 			System.out.println("huTimeMonth" + huTimeMonth);
 			System.out.println("huTimeDay" + huTimeDay);
-			
-			
-			
+						
 			int Year = NowTimeYear-huTimeYear;
 			int Month = NowTimeMonth-huTimeMonth;
-			int Day = NowTimeDay-huTimeDay;
-			
+			int Day = NowTimeDay-huTimeDay;			
 			
 			System.out.println("huTimeYear" + (Year*365) + (Month*31) + Day);
-			int OverdueDays = (Year*365) + (Month*30) + Day;
-			
-			
+			int OverdueDays = (Year*365) + (Month*30) + Day;			
 			if(OverdueDays>0) {
 				returnGoodsfacilityInfoDto.setOverdueDays(OverdueDays);
 			}else {
 				returnGoodsfacilityInfoDto.setOverdueDays(0);
-			}		
-		
+			}			
 		}else {
 			returnGoodsfacilityInfoDto = null;
 		}
-		
-		
 		
 		return returnGoodsfacilityInfoDto;
 	}
@@ -101,13 +93,13 @@ public class ReturnGoodsfacilityInfoService {
 	@Transactional
 	public void insertReturnGoodsfacilityInfo(ReturnGoodsfacilityInfoDto returnGoodsfacilityInfoDto) {
 		
-		//반납등록 insert
+		//반납등록
 		returnGoodsfacilityInfoDao.insertReturnGoodsfacilityInfo(returnGoodsfacilityInfoDto);
-		//배달신청 취소 update 
+		//배달신청 취소 
 		returnGoodsfacilityInfoDao.updateIsCanceledDelivery(returnGoodsfacilityInfoDto);
 		
 	}
-	//등록된 반납정보 조회
+	//반납정보 조회
 	public Map<String, Object> selectReturnGoodsfacilityInfo(ReturnGoodsfacilityInfoDto returnGoodsfacilityInfoDto
 																			, int currentPage
 																			, int pagePerRow

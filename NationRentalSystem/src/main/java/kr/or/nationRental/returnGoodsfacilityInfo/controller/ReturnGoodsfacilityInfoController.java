@@ -54,7 +54,8 @@ public class ReturnGoodsfacilityInfoController {
 		returnGoodsfacilityInfoService.insertReturnGoodsfacilityInfo(returnGoodsfacilityInfoDto);
 		return "redirect:/selectReturnGoodsfacilityInfo";
 	}
-	//공무원이 속한 행정기관에서 등록한 반납정보 조회
+	
+	//반납정보 조회
 	@RequestMapping(value="/selectReturnGoodsfacilityInfo", method=RequestMethod.GET)
 	public String selectReturnGoodsfacilityInfo(@RequestParam(value="currentPage", defaultValue="1") int currentPage
 												,@RequestParam(value="pagePerRow", defaultValue="10", required=true) int pagePerRow

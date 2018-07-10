@@ -5,7 +5,11 @@
   
  <mapper namespace="kr.or.nationRental.returnGoodsfacilityInfo.service.ReturnGoodsfacilityInfoMapper">
  	
- 	<select id="returnGoodsfacilityInfoCheck" parameterType="kr.or.nationRental.rentGoodsFacility.service.RentGoodsfacilityDto" resultType="kr.or.nationRental.returnGoodsfacilityInfo.service.ReturnGoodsfacilityInfoDto">
+ 	<!-- //대여/예약정보 셋팅, 반납등록품목 물품인지 시설인지 셋팅
+	//해당 물품/시설코드로 가장 최근에 대여된 데이터를 찾는다 -->
+ 	<select id="returnGoodsfacilityInfoCheck" 
+ 		parameterType="kr.or.nationRental.rentGoodsFacility.service.RentGoodsfacilityDto" 
+ 		resultType="kr.or.nationRental.returnGoodsfacilityInfo.service.ReturnGoodsfacilityInfoDto">
  		select 
  			goodsfacility_rental.goodsfacility_rental_code as goodsfacilityRentalCode
  			,goodsfacility_rental.citizen_id as citizenId
@@ -14,28 +18,35 @@
 			,goodsfacility.goodsfacility_classify_goodsfacility as classifyGoodsfacility
 		from goodsfacility_rental
 		inner join goodsfacility
-		using(goodsfacility_code)
+			using(goodsfacility_code)
 		where goodsfacility_code = #{goodsfacilityCode}
-		order by goodsfacility_rental_date_registration DESC limit 1	
+		order by goodsfacility_rental_date_registration DESC 
+		limit 1	
  	</select> 
  	
- 	<select id="selectOneGoodsfacilityRentalIsOrderedDelivery" parameterType="Integer" resultType="Integer">
+ 	<!-- 배달반납 신청유무를 구하기 위한 코드 -->
+ 	<select id="selectOneGoodsfacilityRentalIsOrderedDelivery" 
+ 		parameterType="Integer" 
+ 		resultType="Integer">
  		select 
  			count(delivery_order_citizen_code)
-			from
-			delivery_order_citizen
+		from delivery_order_citizen
 			where goodsfacility_rental_code = #{goodsfacilityRentalCode}
 			and classify_rental_state = '반납'
  	</select>
  	
- 	<select id="stateGoodsCode" resultType="kr.or.nationRental.returnGoodsfacilityInfo.service.StateGoodsDto">
+ 	<!-- 선택할 수 있는 반납 상태 리스트 -->
+ 	<select id="stateGoodsCode" 
+ 		resultType="kr.or.nationRental.returnGoodsfacilityInfo.service.StateGoodsDto">
  		select 
  			state_goods_code as stateGoodsCode
  			,state_goods as stateGoods
 		from state_goods
  	</select>
  	
- 	<insert id="insertReturnGoodsfacilityInfo" parameterType="kr.or.nationRental.returnGoodsfacilityInfo.service.ReturnGoodsfacilityInfoDto">
+ 	<!-- 반납등록 -->
+ 	<insert id="insertReturnGoodsfacilityInfo" 
+ 		parameterType="kr.or.nationRental.returnGoodsfacilityInfo.service.ReturnGoodsfacilityInfoDto">
  		INSERT INTO return_goodsfacility_info
 			(return_goodsfacility_info_code
 			, goodsfacility_rental_code
@@ -62,21 +73,28 @@
 			, NOW())
  	</insert>
  	
- 	<update id="updateIsCanceledDelivery" parameterType="kr.or.nationRental.returnGoodsfacilityInfo.service.ReturnGoodsfacilityInfoDto">
+ 	<!-- 배달신청 취소 -->
+ 	<update id="updateIsCanceledDelivery" 
+ 		parameterType="kr.or.nationRental.returnGoodsfacilityInfo.service.ReturnGoodsfacilityInfoDto">
 		UPDATE delivery_order_citizen
-			SET		
-			is_canceled_delivery = 'Y'
+			SET	is_canceled_delivery = 'Y'
 		WHERE goodsfacility_rental_code = #{goodsfacilityRentalCode}	
 	</update>
  	
- 	<select	id="checkreturnGoodsfacilityInfo" parameterType="kr.or.nationRental.returnGoodsfacilityInfo.service.ReturnGoodsfacilityInfoDto" resultType="Integer">
+ 	<!-- 이미 반납된 물품인지 확인하기 위해 대여/예약코드로 반납 데이터베이스에 등록된 정보가 있는지 확인 -->
+ 	<select	id="checkReturnGoodsfacilityInfo" 
+ 		parameterType="kr.or.nationRental.returnGoodsfacilityInfo.service.ReturnGoodsfacilityInfoDto" 
+ 		resultType="Integer">
  		select 
-			count(*) from 
-			return_goodsfacility_info
+			count(*) 
+		from return_goodsfacility_info
 			where goodsfacility_rental_code = #{goodsfacilityRentalCode} 	
  	</select>
  	
- 	<select id="selectReturnGoodsfacilityInfo" parameterType="java.util.Map" resultType="kr.or.nationRental.returnGoodsfacilityInfo.service.ReturnGoodsfacilityInfoDto">
+ 	<!-- 반납정보 조회 -->
+ 	<select id="selectReturnGoodsfacilityInfo" 
+ 		parameterType="java.util.Map" 
+ 		resultType="kr.or.nationRental.returnGoodsfacilityInfo.service.ReturnGoodsfacilityInfoDto">
  		select 
 			return_goodsfacility_info.return_goodsfacility_info_code as returnGoodsfacilityInfoCode
 			,return_goodsfacility_info.goodsfacility_rental_code as goodsfacilityRentalCode
@@ -93,14 +111,14 @@
 			,return_goodsfacility_info.state_goods_code as stateGoodsCode
 			,st.state_goods as stateGoods
 			,return_goodsfacility_info.date_return_check as  dateReturnCheck
-			from return_goodsfacility_info
-			join goodsfacility
+		from return_goodsfacility_info
+		join goodsfacility
 			using(goodsfacility_code)
-			join citizen
+		join citizen
 			using(citizen_id)
-			join functionary
+		join functionary
 			on return_goodsfacility_info.functionary_id = functionary.functionary_id
-			join state_goods as st
+		join state_goods as st
 			using(state_goods_code)
 			<choose>	      
 		        <when test="searchOption == '전체 검색'">    
@@ -129,8 +147,7 @@
 		        <when test="searchOption == '반납날짜 검색'">
 		        	WHERE (return_goodsfacility_info.date_return_check BETWEEN #{dateDto.startDate} AND #{dateDto.endDate})       	        	           
 		        </when>	
-	    	</choose>
-	    	
+	    	</choose>	    	
 	    	<choose>
 	    		<when test="memberLevel == '공무원'">
 					and return_goodsfacility_info.adminagency_code = #{adminagencyCode}	
@@ -139,20 +156,22 @@
 					and return_goodsfacility_info.citizen_id = #{citizenId}	
 				</when>
 			</choose>
-			ORDER BY return_goodsfacility_info.date_return_check DESC
-			LIMIT #{beginRow}, #{pagePerRow}						 		
+		ORDER BY return_goodsfacility_info.date_return_check DESC
+		LIMIT #{beginRow}, #{pagePerRow}						 		
  	</select>
  	
+ 	<!-- 반납정보 조회 카운트 -->
  	<select id="totalCountSelectReturnGoodsfacilityInfo" parameterType="java.util.Map" resultType="Integer">
- 		select count(*)
-			from return_goodsfacility_info
-			join goodsfacility
+ 		select 
+ 			count(*)
+		from return_goodsfacility_info
+		join goodsfacility
 			using(goodsfacility_code)
-			join citizen
+		join citizen
 			using(citizen_id)
-			join functionary
+		join functionary
 			on return_goodsfacility_info.functionary_id = functionary.functionary_id
-			join state_goods as st
+		join state_goods as st
 			using(state_goods_code)
 			<choose>	      
 		        <when test="searchOption == '전체 검색'">    
@@ -181,8 +200,7 @@
 		        <when test="searchOption == '반납날짜 검색'">
 		        	WHERE return_goodsfacility_info.date_return_check BETWEEN #{dateDto.startDate} AND #{dateDto.endDate}        	        	           
 		        </when>	
-	    	</choose>
-	    	
+	    	</choose>	    	
 			<choose>
 	    		<when test="memberLevel == '공무원'">
 					and return_goodsfacility_info.adminagency_code = #{adminagencyCode}	

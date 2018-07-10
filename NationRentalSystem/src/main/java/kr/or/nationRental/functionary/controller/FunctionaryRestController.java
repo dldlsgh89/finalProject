@@ -26,7 +26,8 @@ public class FunctionaryRestController {
 	private AgencyEmployeeService agencyEmployeeService;	
 	
 	private static final Logger logger = LoggerFactory.getLogger(FunctionaryRestController.class);
-		
+	
+	//행정기관 검색
 	@RequestMapping(value="/selectAdminagency", method=RequestMethod.POST)
 	public List<FunctionaryDto> selectAdminagency(@RequestParam(value="checkAdminagency") String checkAdminagency) {
 		logger.debug("FunctionaryRestController - selectAdminagency - checkAdminagency : " + checkAdminagency);
@@ -40,6 +41,8 @@ public class FunctionaryRestController {
 		return list;
 	}
 	
+	//아이디체크
+	//춘림이형이 만들어놓은 메서드로 연결
 	@RequestMapping(value="/idCheck", method=RequestMethod.GET)
 	public String idCheck(AgencyEmployeeDto agencyEmployeeDto) {
 		logger.debug("POST idCheck AgencyEmployeeRestController");

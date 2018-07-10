@@ -20,12 +20,14 @@ public class ReturnGoodsfacilityInfoDao {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ReturnGoodsfacilityInfoDao.class);
 	
-	//대여/예약정보 셋팅
+	//대여/예약정보 셋팅, 반납등록품목 물품인지 시설인지 셋팅
+	//해당 물품/시설코드로 가장 최근에 대여된 데이터를 찾는다
 	public ReturnGoodsfacilityInfoDto returnGoodsfacilityInfoCheck(GoodsFacilityDto goodsFacilityDto) {
 		logger.debug("ReturnGoodsfacilityInfoDao - returnGoodsfacilityInfoCheck - goodsFacilityDto : " + goodsFacilityDto.toString());
 		return sqlsession.selectOne(NS + "returnGoodsfacilityInfoCheck", goodsFacilityDto);
 	}
-
+	
+	//배달반납 신청유무를 구하기 위한 코드
 	public int selectOneGoodsfacilityRentalIsOrderedDelivery(int goodsfacilityRentalCode) {
 		logger.debug("ReturnGoodsfacilityInfoDao - selectOneGoodsfacilityRentalIsOrderedDelivery - goodsfacilityRentalCode : " + goodsfacilityRentalCode);
 		return sqlsession.selectOne(NS+"selectOneGoodsfacilityRentalIsOrderedDelivery", goodsfacilityRentalCode);
@@ -37,27 +39,29 @@ public class ReturnGoodsfacilityInfoDao {
 		return sqlsession.selectList(NS + "stateGoodsCode");
 	}
 	
-	//반납등록 insert
+	//반납등록
 	public void insertReturnGoodsfacilityInfo(ReturnGoodsfacilityInfoDto returnGoodsfacilityInfoDto) {
 		logger.debug("ReturnGoodsfacilityInfoDao - insertReturnGoodsfacilityInfo - returnGoodsfacilityInfoDto : " + returnGoodsfacilityInfoDto.toString());
 		sqlsession.insert(NS+"insertReturnGoodsfacilityInfo", returnGoodsfacilityInfoDto);
 	}
 	
-	//배달신청 취소 update 
+	//배달신청 취소
 	public void updateIsCanceledDelivery(ReturnGoodsfacilityInfoDto returnGoodsfacilityInfoDto) {
 		logger.debug("ReturnGoodsfacilityInfoDao - updateIsCanceledDelivery - returnGoodsfacilityInfoDto : " + returnGoodsfacilityInfoDto.toString());
 		sqlsession.update(NS+"updateIsCanceledDelivery", returnGoodsfacilityInfoDto);			
 	}
-
-	public int checkreturnGoodsfacilityInfo(ReturnGoodsfacilityInfoDto returnGoodsfacilityInfoDto) {
-		return sqlsession.selectOne(NS+"checkreturnGoodsfacilityInfo", returnGoodsfacilityInfoDto);		
+	
+	//이미 반납된 물품인지 확인하기 위해 대여/예약코드로 반납 데이터베이스에 등록된 정보가 있는지 확인
+	public int checkReturnGoodsfacilityInfo(ReturnGoodsfacilityInfoDto returnGoodsfacilityInfoDto) {
+		return sqlsession.selectOne(NS+"checkReturnGoodsfacilityInfo", returnGoodsfacilityInfoDto);		
 	}
 	
-	//등록된 반납정보 조회	
+	//반납정보 조회	
 	public List<ReturnGoodsfacilityInfoDto> selectReturnGoodsfacilityInfo(Map<String, Object> map) {
 		return sqlsession.selectList(NS+"selectReturnGoodsfacilityInfo", map);	
 	}
-
+	
+	//반납정보 조회 카운트
 	public int totalCountSelectReturnGoodsfacilityInfo(Map<String, Object> map) {		
 		return sqlsession.selectOne(NS+"totalCountSelectReturnGoodsfacilityInfo", map);	
 	}

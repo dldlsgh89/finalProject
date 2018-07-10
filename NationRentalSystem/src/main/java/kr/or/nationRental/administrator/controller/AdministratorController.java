@@ -52,7 +52,7 @@ public class AdministratorController {
 	public String insertAdministrator(AdministratorDto administratorDto) {
 		logger.info("---insertAdministrator POST");
 		administratorService.insertAdministrator(administratorDto);
-		return "redirect:/";
+		return "redirect:/joinCongratulation";
 	}
 	
 	//관리자 계정 목록

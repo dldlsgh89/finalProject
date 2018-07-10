@@ -30,14 +30,18 @@ public class FunctionaryService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(FunctionaryService.class);
 	
+	//공무원 가입
 	//트랜잭션 처리가 안되는것 같다
 	@Transactional
 	public void insertFunctionary(FunctionaryDto functionaryDto) {
 		logger.debug("FunctionaryService - insertFunctionary : " + functionaryDto.toString());
+		//공무원 기본정보 등록
 		functionaryDao.insertFunctionary(functionaryDto);
+		//공무원 전출이력정보 등록
 		functionaryDao.insertFunctionaryMoveInout(functionaryDto);
 	}
 	
+	//공무원 조회리스트
 	public Map<String, Object> selectListFunctionary(int currentPage, int pagePerRow, String searchOption, String keyword) {
 		logger.debug("FunctionaryService - selectListFunctionary - currentPage : " + currentPage);
 		logger.debug("FunctionaryService - selectListFunctionary - pagePerRow  : " + pagePerRow);
@@ -53,8 +57,10 @@ public class FunctionaryService {
 		map.put("keyword", keyword);/*
 		map.put("loginMemberId", loginMemberId);*/
 		
+		//공무원 조회리스트
 		List<FunctionaryDto> list = functionaryDao.selectListFunctionary(map);
 		logger.debug("FunctionaryService - selectListFunctionary - list  : " + list.toString());
+		//공무원 조회리스트의 총 데이터 갯수
 		int total = functionaryDao.totalCountFunctionary(map);
 		logger.debug("FunctionaryService - selectListFunctionary - total  : " + total);
 			
@@ -90,20 +96,30 @@ public class FunctionaryService {
 		return returnfunctionaryDto;
 	}
 	
+	//공무원 정보 수정
 	@Transactional
 	public int updateFunctionnary(FunctionaryDto functionaryDto) {
 		logger.debug("FunctionaryService - updateFunctionnary - functionaryDto : " + functionaryDto.toString());
 		String fuctionaryId = functionaryDto.getFunctionaryId();
-		FunctionaryDto returnfunctionaryDto = functionaryDao.selectFunctionaryMoveInout(fuctionaryId);
-		logger.debug("FunctionaryService - selectFunctionaryMoveInout - returnfunctionaryDto : " + returnfunctionaryDto.getFunctionaryMoveInoutCode());
-		functionaryDao.updateFuctionaryMoveInout(returnfunctionaryDto);
+		int updateAdminagencyCode = functionaryDto.getAdminagencyCode();
+		logger.debug("FunctionaryService - updateFunctionnary - updateAdminagencyCode : " + updateAdminagencyCode);
+		//아이디로 이력관리테이블 조회
+		FunctionaryDto returnfunctionaryDto = functionaryDao.selectFunctionaryMoveInout(fuctionaryId);		
+		logger.debug("FunctionaryService - selectFunctionaryMoveInout - returnfunctionaryDto : " + returnfunctionaryDto.getAdminagencyCode());
 		
-		functionaryDao.insertFunctionaryMoveInout(functionaryDto);	
-		logger.debug("FunctionaryService - insertFunctionaryMoveInout - functionaryDto : " + functionaryDto.toString());
-		
+		//이력관리테이블을 조회해서 가장 최근에 입력한 이력의 행정기관 코드가 현재 입력한 행정기관의 코드와 같지 않다면 전출이력정보 수정과 새 등록
+		if(updateAdminagencyCode != returnfunctionaryDto.getAdminagencyCode()) {
+			//공무원 이전 전출이력정보 수정
+			functionaryDao.updateFuctionaryMoveInout(returnfunctionaryDto);
+			//공무원 전출이력정보 등록 
+			functionaryDao.insertFunctionaryMoveInout(functionaryDto);	
+			logger.debug("FunctionaryService - insertFunctionaryMoveInout - functionaryDto : " + functionaryDto.toString());
+		}
+		//공무원 기본정보 수정
 		return functionaryDao.updateFunctionnary(functionaryDto);
 	}
-
+	
+	//행정기관 검색
 	public List<FunctionaryDto> selectAdminagency(String checkAdminagency) {
 		logger.debug("FunctionaryService - selectAdminagency - checkAdminagency : " + checkAdminagency);
 			
@@ -112,20 +128,21 @@ public class FunctionaryService {
 		logger.debug("FunctionaryService - selectAdminagency - list : " + list.toString());
 		return list;
 	}
-
+	
+	//공무원 탈퇴
 	@Transactional
 	public void deleteFunctionnary(FunctionaryDto functionaryDto) {
 		logger.debug("FunctionaryService - deleteFunctionnary - functionaryId : " + functionaryDto);
 		String fuctionaryId = functionaryDto.getFunctionaryId();
-		//공무원 이력수정처리를 위한 select
+		//아이디로 이력관리테이블 조회
 		FunctionaryDto returnfunctionaryDto = functionaryDao.selectFunctionaryMoveInout(fuctionaryId);
-		//공무원 이력수정처리
+		//공무원 이전 전출이력정보 수정
 		functionaryDao.updateFuctionaryMoveInout(returnfunctionaryDto);
-		//탈퇴공무원 데이터 1년저장을 위한 select
+		//공무원 기본정보조회
 		functionaryDto = functionaryDao.viewFunctionaryInfo(fuctionaryId);
-		//탈퇴공무원 데이터 1년저장을 위한 insert
+		//탈퇴공무원정보 등록
 		functionaryDao.insertStorageFunctionary(functionaryDto);
-		//delete 처리		
+		//공무원 탈퇴		
 		functionaryDao.deleteFunctionnary(functionaryDto);
 		 
 	}
@@ -167,7 +184,8 @@ public class FunctionaryService {
 		
 		return map;
 	}*/
-
+	
+	//공무원 업무조회
 	public Map<String, Object> selectFunctionaryWork(FunctionaryDto functionaryDto
 																	, int currentPage
 																	, int pagePerRow
